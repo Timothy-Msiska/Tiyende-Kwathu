@@ -1,0 +1,35 @@
+{
+    "name": "tiyende_kwathu",
+    "short_name": "tiyende_kwathu",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Tiyende Kwathu is a mobile-based application designed to reduce drunk driving in Malawi by offering a safe and reliable alternative. Inspired by South Africa’s Scooter Angels, the app connects individuals who have been drinking with trained and background-checked drivers called Tiyende Kwathu Agents who drive them home in their own vehicles.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
