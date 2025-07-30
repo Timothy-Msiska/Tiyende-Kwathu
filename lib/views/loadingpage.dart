@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'homePage.dart'; // Make sure this path is correct
+import 'package:tiyende_kwathu/views/id.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

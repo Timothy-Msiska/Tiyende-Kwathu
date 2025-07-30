@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiyende_kwathu/views/emailLogin.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -73,7 +74,13 @@ class _HomepageState extends State<Homepage> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => setState(() => isIdLogin = false),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const HomepageEmail()),
+                              );
+                            },
+
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               decoration: BoxDecoration(
