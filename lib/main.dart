@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tiyende_kwathu/views/loadingpage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:tiyende_kwathu/views/loadingpage.dart';  // Assuming SplashScreen is in loadingpage.dart
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();  // Ensure binding before async
+  await Firebase.initializeApp();              // Initialize Firebase
   runApp(const MyApp());
 }
 

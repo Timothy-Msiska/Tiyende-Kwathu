@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tiyende_kwathu/views/id.dart';
+import 'package:tiyende_kwathu/views/register.dart';
+import 'package:tiyende_kwathu/views/forgotPassword.dart';
 
 class HomepageEmail extends StatefulWidget {
   const HomepageEmail({super.key});
@@ -10,6 +13,45 @@ class HomepageEmail extends StatefulWidget {
 
 class _HomepageEmailState extends State<HomepageEmail> {
   bool isIdLogin = false; // Default to email login
+  bool _obscureText = true; // Controls password visibility
+
+  // Add FirebaseAuth instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Controllers for the email and password TextFields
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  String loginMessage = '';
+
+  // Method to handle email/password login
+  Future<void> login() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      setState(() {
+        loginMessage = 'Login Successful! Welcome ${userCredential.user?.email}';
+      });
+
+      // TODO: Navigate to next page or home screen after successful login
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => YourNextPage()));
+
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        loginMessage = e.message ?? 'Login failed. Please try again.';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers when widget is removed from widget tree
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +139,14 @@ class _HomepageEmailState extends State<HomepageEmail> {
                         ],
                       ),
 
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 40),
 
-                      // Email Input
+                      // Email Input with controller
                       TextField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                          labelText: 'user@email.com',
+                          labelText: 'Email',
                           hintText: 'you@example.com',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -112,14 +156,24 @@ class _HomepageEmailState extends State<HomepageEmail> {
                         ),
                       ),
 
-                      const SizedBox(height: 90),
+                      const SizedBox(height: 20),
 
-                      // Password Input
+                      // Password Input with visibility toggle and controller
                       TextField(
-                        obscureText: true,
+                        controller: passwordController,
+                        obscureText: _obscureText,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          suffixIcon: const Icon(Icons.visibility_off),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -128,13 +182,27 @@ class _HomepageEmailState extends State<HomepageEmail> {
                         ),
                       ),
 
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 10),
+
+                      // Display login message
+                      if (loginMessage.isNotEmpty)
+                        Text(
+                          loginMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+
+                      const SizedBox(height: 30),
 
                       // Forgot Password
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                            );
+                          },
                           child: const Text(
                             'Forgot your password?',
                             style: TextStyle(color: Color(0xFF0A2F5A)),
@@ -142,31 +210,41 @@ class _HomepageEmailState extends State<HomepageEmail> {
                         ),
                       ),
 
-                      const SizedBox(height: 140),
+                      const SizedBox(height: 40),
 
                       // Register
-                      Text.rich(
-                        TextSpan(
-                          text: "Don't have an account? ",
-                          children: [
-                            TextSpan(
-                              text: 'Register',
-                              style: TextStyle(
-                                color: Color(0xFF0A2F5A),
-                                fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const RegisterPage()),
+                          );
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Don't have an account? ",
+                            style: TextStyle(color: Colors.black87),
+                            children: [
+                              TextSpan(
+                                text: 'Register',
+                                style: TextStyle(
+                                  color: Color(0xFF0A2F5A),
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
 
                       const SizedBox(height: 20),
 
-                      // Login Button
+                      // Login Button triggers Firebase sign-in
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: login, // <-- Call login method here
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0A2F5A),
                             padding: const EdgeInsets.symmetric(vertical: 16),
